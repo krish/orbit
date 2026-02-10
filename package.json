@@ -1,0 +1,48 @@
+{
+  "name": "auth-user-service",
+  "version": "1.0.0",
+  "description": "Serverless aws-nodejs-typescript template",
+  "main": "serverless.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=20.3.1"
+  },
+  "dependencies": {
+    "@middy/core": "^2.5.3",
+    "@middy/http-json-body-parser": "^2.5.3",
+    "@middy/ssm": "^3.1.0",
+    "axios": "^0.21.4",
+    "base64url": "^3.0.1",
+    "crypto": "^1.0.1",
+    "generate-password": "^1.7.0",
+    "i": "^0.3.7",
+    "ioredis": "^5.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.5",
+    "npm": "^8.10.0",
+    "pem-jwk": "^2.0.0",
+    "pg": "^8.7.3",
+    "pino-lambda": "^4.0.0",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^3.0.0",
+    "@types/aws-lambda": "^8.10.93",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "^14.14.25",
+    "esbuild": "^0.14.11",
+    "json-schema-to-ts": "^1.5.0",
+    "serverless": "^3.0.0",
+    "serverless-domain-manager": "^6.4.2",
+    "serverless-esbuild": "^1.23.3",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-offline": "^8.8.0",
+    "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.1.3"
+  },
+  "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
+  "license": "MIT"
+}
