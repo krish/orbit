@@ -1,5 +1,6 @@
 import {getConnection} from 'typeorm';
 import {logger} from '@libs/logger-service';
+import * as https from 'https';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -199,14 +200,9 @@ async function resolveIpToGeo(ip: string): Promise<GeoLocation | null> {
       return null;
     }
 
-    const response = await fetch(`${GEO_API_URL}/${ip}`);
-    if (!response.ok) {
-      logger.warn({ip, status: response.status}, 'Geo-IP API returned non-200');
-      return null;
-    }
+    const data = await httpsGet<{status: string; lat: number; lon: number; country: string}>(`${GEO_API_URL}/${ip}`);
 
-    const data = (await response.json()) as {status: string; lat: number; lon: number; country: string};
-    if (data.status !== 'success') {
+    if (!data || data.status !== 'success') {
       logger.warn({ip, data}, 'Geo-IP API returned failure status');
       return null;
     }
@@ -216,6 +212,30 @@ async function resolveIpToGeo(ip: string): Promise<GeoLocation | null> {
     logger.warn({err, ip}, 'Geo-IP API call failed');
     return null;
   }
+}
+
+/**
+ * Minimal Promise wrapper around Node's built-in https.get.
+ * Avoids the need for fetch (DOM lib) or axios as a dependency.
+ */
+function httpsGet<T>(url: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        let raw = '';
+        res.on('data', (chunk) => {
+          raw += chunk;
+        });
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(raw) as T);
+          } catch (e) {
+            reject(new Error(`Failed to parse geo-IP response: ${raw}`));
+          }
+        });
+      })
+      .on('error', reject);
+  });
 }
 
 function isPrivateIp(ip: string): boolean {
